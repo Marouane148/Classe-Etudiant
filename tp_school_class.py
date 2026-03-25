@@ -1,3 +1,6 @@
+from collections.abc import Iterable, Iterator
+
+
 class Student:
     def __init__(self, name, matter_1, matter_2, matter_3):
         self.name = name
@@ -12,7 +15,20 @@ class Student:
                 f"matter_3={self.matter_3})")
 
 
-class SchoolClass:
+class Matter1Iterator(Iterator):
+    def __init__(self, students):
+        self.students = sorted(students, key=lambda student: student.matter_1, reverse=True)
+        self.index = 0
+
+    def __next__(self):
+        if self.index >= len(self.students):
+            raise StopIteration
+        student = self.students[self.index]
+        self.index += 1
+        return student
+
+
+class SchoolClass(Iterable):
     def __init__(self):
         self.students = []
 
@@ -27,6 +43,9 @@ class SchoolClass:
 
     def rank_matter_3(self):
         return sorted(self.students, key=lambda student: student.matter_3, reverse=True)
+
+    def __iter__(self):
+        return Matter1Iterator(self.students)
 
 
 if __name__ == "__main__":
@@ -43,3 +62,7 @@ if __name__ == "__main__":
 
     print("Classement matière 3 :")
     print(school_class.rank_matter_3())
+
+    print("Itération sur matière 1 :")
+    for student in school_class:
+        print(student)
