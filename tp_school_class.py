@@ -67,6 +67,27 @@ class Matter3Iterator(Iterator):
         return student
 
 
+def add_matter_4_iterator(cls):
+    class Matter4Iterator(Iterator):
+        def __init__(self, students):
+            self.students = sorted(students, key=lambda student: student.matter_4, reverse=True)
+            self.index = 0
+
+        def __next__(self):
+            if self.index >= len(self.students):
+                raise StopIteration
+            student = self.students[self.index]
+            self.index += 1
+            return student
+
+    def get_matter_4_iterator(self):
+        return Matter4Iterator(self.students)
+
+    cls.get_matter_4_iterator = get_matter_4_iterator
+    return cls
+
+
+@add_matter_4_iterator
 class SchoolClass(Iterable):
     def __init__(self):
         self.students = []
@@ -118,4 +139,8 @@ if __name__ == "__main__":
 
     print("Itération sur matière 3 :")
     for student in school_class.get_matter_3_iterator():
+        print(student)
+
+    print("Itération sur matière 4 :")
+    for student in school_class.get_matter_4_iterator():
         print(student)
