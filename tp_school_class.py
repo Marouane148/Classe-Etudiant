@@ -89,8 +89,13 @@ def add_matter_4_iterator(cls):
 
 @add_matter_4_iterator
 class SchoolClass(Iterable):
-    def __init__(self):
-        self.students = []
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(SchoolClass, cls).__new__(cls)
+            cls._instance.students = []
+        return cls._instance
 
     def add_student(self, student):
         self.students.append(student)
@@ -144,3 +149,7 @@ if __name__ == "__main__":
     print("Itération sur matière 4 :")
     for student in school_class.get_matter_4_iterator():
         print(student)
+
+    another_class = SchoolClass()
+
+    print("Singleton test :", school_class is another_class)
